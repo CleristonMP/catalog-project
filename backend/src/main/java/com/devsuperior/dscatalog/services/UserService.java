@@ -89,7 +89,6 @@ public class UserService implements UserDetailsService {
 			throw new DatabaseException("Integrity violation");
 		}
 	}
-	
 
 	private void copyDtoToEntity(UserDTO dto, User entity) {
 		entity.setFirstName(dto.getFirstName());
