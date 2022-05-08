@@ -38,8 +38,8 @@
 }
 
 .btn-product-filter-clear {
-  font-weight: bold;
-  border-radius: 10px;
+  font-weight: bold !important;
+  border-radius: 10px !important;
 }
 
 .btn-product-filter-word {
