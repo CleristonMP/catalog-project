@@ -5,7 +5,7 @@ import { requestBackendLogin } from 'util/requests';
 import { useContext, useState } from 'react';
 import { AuthContext } from 'AuthContext';
 import { saveAuthData } from 'util/storage';
-import { getTokenData } from 'util/auth';
+import { getTokenData } from "util/token";
 
 import './styles.css';
 
@@ -21,13 +21,13 @@ type LocationState = {
 const Login = () => {
   const location = useLocation<LocationState>();
 
-  const { from } = location.state || { from: { pathname: '/admin'} };
+  const { from } = location.state || { from: { pathname: '/admin' } };
 
   const { setAuthContextData } = useContext(AuthContext);
 
   const [hasError, setHasError] = useState(false);
 
-  const { register, handleSubmit, formState: {errors} } = useForm<CredentialsDTO>();
+  const { register, handleSubmit, formState: { errors } } = useForm<CredentialsDTO>();
 
   const history = useHistory();
 
@@ -61,7 +61,7 @@ const Login = () => {
         <div className="mb-4">
           <input
             {...register('username', {
-              required: 'Campo obrigatório', 
+              required: 'Campo obrigatório',
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: 'Email inválido'
