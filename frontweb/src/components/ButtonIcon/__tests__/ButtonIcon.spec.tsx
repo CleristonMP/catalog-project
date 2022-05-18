@@ -8,4 +8,5 @@ test('ButtonIcon should render button with given test', () => {
         <ButtonIcon text={text} />
     );
     expect(screen.getByText(text)).toBeInTheDocument();
+    expect(screen.getByTestId('arrow')).toBeInTheDocument();
 });
