@@ -1,0 +1,50 @@
+.signup-card {
+  padding: 15px;
+  font-size: 16px;
+}
+
+.signup-card h1 {
+  font-weight: normal;
+  font-size: 2em;
+  text-align: center;
+  letter-spacing: -0.015em;
+  color: #263238;
+  text-transform: uppercase;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.signup-btns {
+  display: flex;
+  flex-direction: column;
+  max-width: 300px;
+  margin: 30px auto;
+}
+
+.send-btn {
+  color: #fff;
+  margin-bottom: 15px;
+  min-width: 150px;
+}
+
+.clean-btn {
+  min-width: 150px;
+}
+
+@media (min-width: 576px) {
+  .signup-card {
+    padding: 20px 50px;
+  }
+}
+
+@media (min-width: 768px) {
+  .signup-btns {
+    max-width: 350px;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .send-btn {
+    margin-bottom: 0;
+  }
+}
