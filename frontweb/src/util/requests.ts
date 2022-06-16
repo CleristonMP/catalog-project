@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs';
+import { NewUser } from "types/new-user";
 import history from './history';
 import { getAuthData } from './storage';
 
@@ -37,12 +38,27 @@ export const requestBackendLogin = (loginData: LoginData) => {
 export const requestBackend = (config: AxiosRequestConfig) => {
   const headers = config.withCredentials
     ? {
-        ...config.headers,
-        Authorization: 'Bearer ' + getAuthData().access_token,
-      }
+      ...config.headers,
+      Authorization: 'Bearer ' + getAuthData().access_token,
+    }
     : config.headers;
 
   return axios({ ...config, baseURL: BASE_URL, headers });
+};
+
+export const requestBackendNewUser = (formData: NewUser) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    Authorization: 'Basic ' + window.btoa(CLIENT_ID + ':' + CLIENT_SECRET),
+  };
+
+  return axios({
+    method: 'POST',
+    baseURL: BASE_URL,
+    url: '/new-user-request',
+    data: formData,
+    headers,
+  });
 };
 
 // Add a request interceptor
