@@ -28,7 +28,7 @@ const SignUp = () => {
     requestBackendNewUser(newUser)
       .then((response) => {
         toast.info('Usuário cadastrado com sucesso');
-        history.push('/products'); // temporário
+        history.push('/admin/auth/registered');
       })
       .catch((error) => {
         console.log(error);
