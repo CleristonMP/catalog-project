@@ -15,6 +15,14 @@
   margin-bottom: 50px;
 }
 
+.registered-username {
+  font-size: 1.5em;
+  letter-spacing: -0.015em;
+  display: block;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
 .registered-card p {
   font-size: 1.25em;
   letter-spacing: -0.015em;

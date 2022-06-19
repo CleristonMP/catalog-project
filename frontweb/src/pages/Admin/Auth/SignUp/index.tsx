@@ -1,19 +1,23 @@
 import { NewUser } from 'types/new-user';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { useHistory } from 'react-router-dom';
+//import { useHistory } from 'react-router-dom';
 import { requestBackendNewUser } from 'util/requests';
 
 import './styles.css';
+import { useState } from 'react';
+import Registered from '../Registered';
 
 const SignUp = () => {
+  const [newUserCardData, setNewUserCardData] = useState<NewUser>();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<NewUser>();
 
-  const history = useHistory();
+  //const history = useHistory();
 
   const onSubmit = (formData: NewUser) => {
     const newUser = {
@@ -28,7 +32,8 @@ const SignUp = () => {
     requestBackendNewUser(newUser)
       .then((response) => {
         toast.info('Usuário cadastrado com sucesso');
-        history.push('/admin/auth/registered');
+        setNewUserCardData(response.data);
+        //history.push('/admin/auth/registered');
       })
       .catch((error) => {
         console.log(error);
@@ -36,7 +41,7 @@ const SignUp = () => {
       });
   };
 
-  return (
+  return !newUserCardData ? (
     <div className="base-card signup-card">
       <h1>Cadastre-se</h1>
 
@@ -137,6 +142,12 @@ const SignUp = () => {
         </div>
       </form>
     </div>
+  ) : (
+    <Registered
+      email={newUserCardData.email}
+      firstName={newUserCardData.firstName}
+      lastName={newUserCardData.lastName}
+    />
   );
 };
 
