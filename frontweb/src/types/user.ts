@@ -1,4 +1,9 @@
+import { Role } from "./role";
+
 export type User = {
-  id: number;
-  email: string;
+  id: number,
+  firstName: string,
+  lastName: string,
+  email: string,
+  roles: Role[];
 };
