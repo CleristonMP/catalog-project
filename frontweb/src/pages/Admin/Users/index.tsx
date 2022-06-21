@@ -8,6 +8,8 @@ import { requestBackend } from 'util/requests';
 import UserCrudCard from './UserCrudCard';
 import UserFilter, { UserFilterData } from './UserFilter';
 
+import './styles.css';
+
 type ControlComponentsData = {
   activePage: number;
   filterData: UserFilterData;
@@ -45,8 +47,6 @@ const Users = () => {
         sort: `id,${controlComponentsData.filterData.sort}`,
       },
     };
-
-    console.log(config.params);
 
     requestBackend(config).then((response) => {
       setPage(response.data);

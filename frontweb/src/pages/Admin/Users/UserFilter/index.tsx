@@ -37,7 +37,7 @@ const UserFilter = ({ onSubmitFilter }: Props) => {
 
   const handleFormClear = () => {
     setValue('name', '');
-    setValue('sort', '');
+    setSelectedOption(options[0]);
   };
 
   const handleChangeSort = (option: OptionType) => {
