@@ -1,25 +1,22 @@
-import { NewUser } from 'types/new-user';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-//import { useHistory } from 'react-router-dom';
 import { requestBackendNewUser } from 'util/requests';
-
-import './styles.css';
 import { useState } from 'react';
 import Registered from '../Registered';
+import { User } from 'types/user';
+
+import './styles.css';
 
 const SignUp = () => {
-  const [newUserCardData, setNewUserCardData] = useState<NewUser>();
+  const [newUserCardData, setNewUserCardData] = useState<User>();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<NewUser>();
+  } = useForm<User>();
 
-  //const history = useHistory();
-
-  const onSubmit = (formData: NewUser) => {
+  const onSubmit = (formData: User) => {
     const newUser = {
       ...formData,
       roles: [
@@ -33,7 +30,6 @@ const SignUp = () => {
       .then((response) => {
         toast.info('Usuário cadastrado com sucesso');
         setNewUserCardData(response.data);
-        //history.push('/admin/auth/registered');
       })
       .catch((error) => {
         console.log(error);

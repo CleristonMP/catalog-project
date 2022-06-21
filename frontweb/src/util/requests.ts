@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs';
-import { NewUser } from "types/new-user";
+import { User } from "types/user";
 import history from './history';
 import { getAuthData } from './storage';
 
@@ -46,7 +46,7 @@ export const requestBackend = (config: AxiosRequestConfig) => {
   return axios({ ...config, baseURL: BASE_URL, headers });
 };
 
-export const requestBackendNewUser = (formData: NewUser) => {
+export const requestBackendNewUser = (formData: User) => {
   const headers = {
     'Content-Type': 'application/json',
     Authorization: 'Basic ' + window.btoa(CLIENT_ID + ':' + CLIENT_SECRET),
