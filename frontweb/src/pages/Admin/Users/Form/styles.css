@@ -1,5 +1,5 @@
 .user-crud-form-card {
-  padding: 20px;
+  padding: 20px 10px;
 }
 
 .user-crud-form-title {
@@ -10,28 +10,31 @@
   margin-bottom: 30px;
 }
 
-.margin-bottom-30 {
-  margin-bottom: 30px;
+.user-crud-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .user-crud-inputs-container {
-  margin-bottom: 30px;
-}
-
-.user-crud-inputs-left-container {
-  margin-bottom: 30px;
+  margin-bottom: 10px;
+  width: 100%;
 }
 
 .user-crud-buttons-container {
+  width: 100%;
   display: flex;
   justify-content: space-between;
+  max-width: 300px;
 }
 
 .user-crud-button {
   height: 50px;
-  width: 110px;
+  max-width: 200px;
   font-weight: bold;
   border-radius: 10px;
+  font-size: 12px;
+  width: 48%;
 }
 
 .user-crud-select__control {
@@ -51,18 +54,40 @@
 }
 
 @media (min-width: 576px) {
+  .user-crud-form-card {
+    padding: 30px;
+  }
+
   .user-crud-buttons-container {
-    justify-content: flex-end;
+    max-width: 500px;
   }
 
   .user-crud-button {
-    margin-left: 30px;
-    width: 270px;
+    width: 200px;
   }
 }
 
 @media (min-width: 992px) {
-  .user-crud-inputs-left-container {
+  .user-crud-form-card {
+    padding: 75px 45px 50px;
+  }
+
+  .user-crud-form-title {
+    font-size: 24px;
+    margin-bottom: 45px;
+  }
+
+  .user-crud-inputs-container {
     margin-bottom: 0;
+  }
+
+  .user-crud-buttons-container {
+    margin-top: 60px;
+    margin-left: auto;
+    justify-content: flex-end;
+  }
+
+  .user-crud-button:first-of-type {
+    margin-right: 30px;
   }
 }

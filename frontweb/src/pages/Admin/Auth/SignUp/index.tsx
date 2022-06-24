@@ -22,6 +22,7 @@ const SignUp = () => {
       roles: [
         {
           id: 1,
+          authority: '',
         },
       ],
     };

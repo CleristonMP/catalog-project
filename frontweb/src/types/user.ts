@@ -1,6 +1,6 @@
-type Role = {
+export type Role = {
   id: number;
-  authority?: 'ROLE_OPERATOR' | 'ROLE_ADMIN';
+  authority: string;
 }
 
 export type User = {

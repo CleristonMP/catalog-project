@@ -1,22 +1,17 @@
 import { AxiosRequestConfig } from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import Select from 'react-select';
 import { requestBackend } from 'util/requests';
 import { toast } from 'react-toastify';
-import { User } from 'types/user';
+import { Role, User } from 'types/user';
 
 import './styles.css';
 
-type OptionType = {
-  value: string;
-  label: string;
-};
-
-const options: OptionType[] = [
-  { value: '1', label: 'Operador' },
-  { value: '2', label: 'Admin' },
+const options: Role[] = [
+  { id: 1, authority: 'Operador' },
+  { id: 2, authority: 'Admin' },
 ];
 
 type UrlParams = {
@@ -24,9 +19,6 @@ type UrlParams = {
 };
 
 const Form = () => {
-  const [selectRoles] = useState<OptionType[]>(options);
-  const [selectedOptions, setSelectedOptions] = useState<OptionType[]>([]);
-
   const { userId } = useParams<UrlParams>();
 
   const isEditing = userId !== 'create';
@@ -41,10 +33,6 @@ const Form = () => {
     control,
   } = useForm<User>();
 
-  const handleChange = (option: OptionType[]) => {
-    setSelectedOptions(option);
-  };
-
   useEffect(() => {
     if (isEditing) {
       requestBackend({ url: `/users/${userId}`, withCredentials: true }).then(
@@ -54,9 +42,13 @@ const Form = () => {
           setValue('firstName', user.firstName);
           setValue('lastName', user.lastName);
           setValue('email', user.email);
-          setValue('roles', user.roles);
 
-          //setSelectedOptions();
+          const customRoles = user.roles.map((role) => ({
+            id: role.id,
+            authority: role.authority === 'ROLE_ADMIN' ? 'Admin' : 'Operador',
+          }));
+
+          setValue('roles', customRoles);
         }
       );
     }
@@ -89,120 +81,113 @@ const Form = () => {
   };
 
   return (
-    <div className="user-crud-container">
+    <div className="container">
       <div className="base-card user-crud-form-card">
         <h1 className="user-crud-form-title">DADOS DO USUÁRIO</h1>
 
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="row user-crud-inputs-container">
-            <div className="user-crud-inputs-left-container">
-              <div className="row margin-bottom-30">
-                <div className="col-lg-6">
-                  <input
-                    {...register('firstName', {
-                      required: 'Campo obrigatório',
-                    })}
-                    type="text"
-                    className={`form-control base-input ${
-                      errors.firstName ? 'is-invalid' : ''
-                    }`}
-                    placeholder="Nome do Usuário"
-                    name="firstName"
-                  />
-                  <div className="invalid-feedback d-block">
-                    {errors.firstName?.message}
-                  </div>
-                </div>
-
-                <div className="col-lg-6">
-                  <input
-                    {...register('lastName', {
-                      required: 'Campo obrigatório',
-                    })}
-                    type="text"
-                    className={`form-control base-input ${
-                      errors.lastName ? 'is-invalid' : ''
-                    }`}
-                    placeholder="Sobrenome do Usuário"
-                    name="lastName"
-                  />
-                  <div className="invalid-feedback d-block">
-                    {errors.lastName?.message}
-                  </div>
+        <form className="user-crud-form" onSubmit={handleSubmit(onSubmit)}>
+          <div className="user-crud-inputs-container">
+            <div className="row">
+              <div className="col-lg-6 mb-3 mb-xl-4">
+                <input
+                  {...register('firstName', {
+                    required: 'Campo obrigatório',
+                  })}
+                  type="text"
+                  className={`form-control base-input ${
+                    errors.firstName ? 'is-invalid' : ''
+                  }`}
+                  placeholder="Nome do Usuário"
+                  name="firstName"
+                />
+                <div className="invalid-feedback d-block">
+                  {errors.firstName?.message}
                 </div>
               </div>
 
-              <div className="row margin-bottom-30">
-                <div className="col-lg-6">
-                  <input
-                    {...register('email', {
-                      required: 'Campo obrigatório',
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: 'Email inválido',
-                      },
-                    })}
-                    type="email"
-                    className={`form-control base-input ${
-                      errors.email ? 'is-invalid' : ''
-                    }`}
-                    placeholder="Sobrenome do Usuário"
-                    name="email"
-                  />
-                  <div className="invalid-feedback d-block">
-                    {errors.email?.message}
-                  </div>
+              <div className="col-lg-6 mb-3">
+                <input
+                  {...register('lastName', {
+                    required: 'Campo obrigatório',
+                  })}
+                  type="text"
+                  className={`form-control base-input ${
+                    errors.lastName ? 'is-invalid' : ''
+                  }`}
+                  placeholder="Sobrenome do Usuário"
+                  name="lastName"
+                />
+                <div className="invalid-feedback d-block">
+                  {errors.lastName?.message}
                 </div>
+              </div>
+            </div>
 
-                <div className="col-lg-6">
-                  <label htmlFor="roles" className="d-none">
-                    Funções
-                  </label>
-                  <Controller
-                    name="roles"
-                    rules={{ required: true }}
-                    control={control}
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={selectRoles}
-                        classNamePrefix="user-crud-select"
-                        isMulti
-                        placeholder="Funções"
-                        onChange={(option) =>
-                          handleChange(option as OptionType[])
-                        }
-                        getOptionValue={(option: OptionType) => option.value}
-                        getOptionLabel={(option: OptionType) => option.label}
-                        value={selectedOptions}
-                        inputId="Roles"
-                      />
-                    )}
-                  />
-                  {errors.roles && (
-                    <div className="invalid-feedback d-block">
-                      Campo obrigatório
-                    </div>
+            <div className="row">
+              <div className="col-lg-6 mb-3 mb-xl-4">
+                <input
+                  {...register('email', {
+                    required: 'Campo obrigatório',
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: 'Email inválido',
+                    },
+                  })}
+                  type="email"
+                  className={`form-control base-input ${
+                    errors.email ? 'is-invalid' : ''
+                  }`}
+                  placeholder="E-mail"
+                  name="email"
+                />
+                <div className="invalid-feedback d-block">
+                  {errors.email?.message}
+                </div>
+              </div>
+
+              <div className="col-lg-6 mb-3 mb-xl-4">
+                <label htmlFor="roles" className="d-none">
+                  Funções
+                </label>
+                <Controller
+                  name="roles"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      {...field}
+                      options={options}
+                      classNamePrefix="user-crud-select"
+                      isMulti
+                      placeholder="Funções"
+                      getOptionValue={(role: Role) => String(role.id)}
+                      getOptionLabel={(role: Role) => role.authority}
+                      inputId="Roles"
+                    />
                   )}
-                </div>
-              </div>
-
-              <div className="row margin-bottom-30">
-                <div className="col-lg-6">
-                  <input
-                    {...register('password', {
-                      required: 'Campo obrigatório',
-                    })}
-                    type="password"
-                    className={`form-control base-input ${
-                      errors.password ? 'is-invalid' : ''
-                    }`}
-                    placeholder="Senha"
-                    name="password"
-                  />
+                />
+                {errors.roles && (
                   <div className="invalid-feedback d-block">
-                    {errors.password?.message}
+                    Campo obrigatório
                   </div>
+                )}
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-lg-6 mb-3 mb-xl-4">
+                <input
+                  {...register('password', {
+                    required: 'Campo obrigatório',
+                  })}
+                  type="password"
+                  className={`form-control base-input ${
+                    errors.password ? 'is-invalid' : ''
+                  }`}
+                  placeholder="Senha"
+                  name="password"
+                />
+                <div className="invalid-feedback d-block">
+                  {errors.password?.message}
                 </div>
               </div>
             </div>
