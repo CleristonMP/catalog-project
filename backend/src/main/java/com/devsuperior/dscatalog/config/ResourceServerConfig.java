@@ -30,7 +30,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	
 	private static final String[] OPERATOR_OR_ADMIN = { "/products/**", "/categories/**" };
 	
-	private static final String[] ADMIN = { "/users/**" };
+	private static final String[] ADMIN = { "/users/**", "/new-user-control/**" };
 	
 	@Autowired
 	private JwtTokenStore tokenStore;

@@ -9,18 +9,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.devsuperior.dscatalog.dto.RoleDTO;
-import com.devsuperior.dscatalog.dto.UserDTO;
-import com.devsuperior.dscatalog.dto.UserInsertDTO;
-import com.devsuperior.dscatalog.dto.UserUpdateDTO;
+import com.devsuperior.dscatalog.dto.NewUserDTO;
 import com.devsuperior.dscatalog.entities.NewUser;
-import com.devsuperior.dscatalog.entities.Role;
 import com.devsuperior.dscatalog.repositories.NewUserRepository;
-import com.devsuperior.dscatalog.repositories.RoleRepository;
 import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 
@@ -29,42 +23,35 @@ public class NewUserService {
 
 	@Autowired
 	private NewUserRepository repository;
-	
-	@Autowired
-	private RoleRepository roleRepository;
-	
-	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
 
 	@Transactional(readOnly = true)
-	public Page<UserDTO> findAllPaged(Pageable pageable) {
+	public Page<NewUserDTO> findAllPaged(Pageable pageable) {
 		Page<NewUser> page = repository.findAll(pageable);
-		return page.map(x -> new UserDTO(x));
+		return page.map(x -> new NewUserDTO(x));
 	}
 
 	@Transactional(readOnly = true)
-	public UserDTO findById(Long id) {
+	public NewUserDTO findById(Long id) {
 		Optional<NewUser> obj = repository.findById(id);
 		NewUser entity = obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
-		return new UserDTO(entity);
+		return new NewUserDTO(entity);
 	}
 
 	@Transactional
-	public UserDTO insert(UserInsertDTO dto) {
+	public NewUserDTO insert(NewUserDTO dto) {
 		NewUser entity = new NewUser();
 		copyDtoToEntity(dto, entity);
-		entity.setPassword(passwordEncoder.encode(dto.getPassword()));
 		entity = repository.save(entity);
-		return new UserDTO(entity);
+		return new NewUserDTO(entity);
 	}
 
 	@Transactional
-	public UserDTO update(Long id, UserUpdateDTO dto) {
+	public NewUserDTO update(Long id, NewUserDTO dto) {
 		try {
 			NewUser entity = repository.getOne(id);
 			copyDtoToEntity(dto, entity);
 			entity = repository.save(entity);
-			return new UserDTO(entity);
+			return new NewUserDTO(entity);
 		}
 		catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Id not found " + id);
@@ -83,15 +70,9 @@ public class NewUserService {
 		}
 	}
 	
-	private void copyDtoToEntity(UserDTO dto, NewUser entity) {
+	private void copyDtoToEntity(NewUserDTO dto, NewUser entity) {
 		entity.setFirstName(dto.getFirstName());
 		entity.setLastName(dto.getLastName());
 		entity.setEmail(dto.getEmail());
-		
-		entity.getRoles().clear();
-		for (RoleDTO roleDto : dto.getRoles()) {
-			Role role = roleRepository.getOne(roleDto.getId());
-			entity.getRoles().add(role);
-		}
 	}
 }

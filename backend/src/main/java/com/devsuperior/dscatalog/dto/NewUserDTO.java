@@ -1,15 +1,13 @@
 package com.devsuperior.dscatalog.dto;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-import com.devsuperior.dscatalog.entities.User;
+import com.devsuperior.dscatalog.entities.NewUser;
 
-public class UserDTO implements Serializable {
+public class NewUserDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private Long id;
@@ -20,25 +18,22 @@ public class UserDTO implements Serializable {
 	
 	@Email(message = "Favor inserir um e-mail valido")
 	private String email;
-
-	private Set<RoleDTO> roles = new HashSet<>();
 	
-	public UserDTO() {
+	public NewUserDTO() {
 	}
 
-	public UserDTO(Long id, String firstName, String lastName, String email, String password) {
+	public NewUserDTO(Long id, String firstName, String lastName, String email, String password) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 	}
 	
-	public UserDTO(User entity) {
+	public NewUserDTO(NewUser entity) {
 		id = entity.getId();
 		firstName = entity.getFirstName();
 		lastName = entity.getLastName();
 		email = entity.getEmail();
-		entity.getRoles().forEach(role -> this.roles.add(new RoleDTO(role)));
 	}
 
 	public Long getId() {
@@ -71,9 +66,5 @@ public class UserDTO implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
-	}
-
-	public Set<RoleDTO> getRoles() {
-		return roles;
 	}
 }
