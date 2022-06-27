@@ -5,6 +5,7 @@ import Users from './Users';
 import './styles.css';
 import PrivateRoute from 'components/PrivateRoute';
 import Products from './Products';
+import NewUsersList from './Users/NewUsersList';
 
 const Admin = () => {
   return (
@@ -20,6 +21,9 @@ const Admin = () => {
           </PrivateRoute>
           <PrivateRoute path="/admin/users" roles={['ROLE_ADMIN']}>
             <Users />
+          </PrivateRoute>
+          <PrivateRoute path="/admin/new-users" roles={['ROLE_ADMIN']}>
+            <NewUsersList />
           </PrivateRoute>
         </Switch>
       </div>

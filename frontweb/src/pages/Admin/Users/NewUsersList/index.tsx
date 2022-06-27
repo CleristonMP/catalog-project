@@ -1,13 +1,11 @@
 import { AxiosRequestConfig } from 'axios';
 import Pagination from 'components/Pagination';
 import { useCallback, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { User } from 'types/user';
+import { NewUser } from 'types/new-user';
 import { SpringPage } from 'types/vendor/spring';
 import { requestBackend } from 'util/requests';
-import NewUserRequestCard from '../NewUserRequestCard';
-import UserCrudCard from '../UserCrudCard';
 import UserFilter, { UserFilterData } from '../UserFilter';
+import NewUserInforCard from './NewUserInfoCard';
 
 import './styles.css';
 
@@ -16,14 +14,13 @@ type ControlComponentsData = {
   filterData: UserFilterData;
 };
 
-const List = () => {
-  const [page, setPage] = useState<SpringPage<User>>();
-  const [newRequestCount, setNewRequestCount] = useState<number>(0);
+const NewUsersList = () => {
+  const [page, setPage] = useState<SpringPage<NewUser>>();
 
   const [controlComponentsData, setControlComponentsData] =
     useState<ControlComponentsData>({
       activePage: 0,
-      filterData: { name: '', sort: 'desc' },
+      filterData: { name: '', sort: 'asc' },
     });
 
   const handlePageChange = (pageNumber: number) => {
@@ -37,10 +34,9 @@ const List = () => {
     setControlComponentsData({ activePage: 0, filterData: data });
   };
 
-  const getUsers = useCallback(() => {
+  const getNewUsers = useCallback(() => {
     const config: AxiosRequestConfig = {
-      method: 'GET',
-      url: '/users',
+      url: '/new-user-control',
       withCredentials: true,
       params: {
         page: controlComponentsData.activePage,
@@ -56,41 +52,23 @@ const List = () => {
   }, [controlComponentsData]);
 
   useEffect(() => {
-    getUsers();
-  }, [getUsers]);
-
-  useEffect(() => {
-    requestBackend({ url: '/new-user-control', withCredentials: true }).then(
-      (response) => {
-        setNewRequestCount(response.data.numberOfElements);
-      }
-    );
-  }, []);
+    getNewUsers();
+  }, [getNewUsers]);
 
   return (
     <div className="user-crud-container">
       <div className="user-crud-bar-container">
-        <Link to="/admin/users/create" className="me-3">
-          <button className="btn btn-primary text-white btn-crud-add">
-            ADICIONAR
-          </button>
-        </Link>
         <UserFilter onSubmitFilter={handleSubmitFilter} />
       </div>
-      {newRequestCount ? (
-        <div>
-          <NewUserRequestCard count={newRequestCount} />
-        </div>
-      ) : (
-        ''
-      )}
+
       <div>
-        {page?.content.map((item) => (
-          <div key={item.id}>
-            <UserCrudCard user={item} onDelete={getUsers} />
+        {page?.content.map((newUser) => (
+          <div key={newUser.id}>
+            <NewUserInforCard newUser={newUser} onDelete={getNewUsers} />
           </div>
         ))}
       </div>
+
       <Pagination
         forcePage={page?.number}
         pageCount={page ? page.totalPages : 0}
@@ -101,4 +79,4 @@ const List = () => {
   );
 };
 
-export default List;
+export default NewUsersList;

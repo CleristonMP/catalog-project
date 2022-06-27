@@ -176,9 +176,14 @@ const Form = () => {
             <div className="row">
               <div className="col-lg-6 mb-3 mb-xl-4">
                 <input
-                  {...register('password', {
-                    required: 'Campo obrigatório',
-                  })}
+                  {...register(
+                    'password',
+                    !isEditing
+                      ? {
+                          required: 'Campo obrigatório',
+                        }
+                      : {}
+                  )}
                   type="password"
                   className={`form-control base-input ${
                     errors.password ? 'is-invalid' : ''

@@ -3,31 +3,21 @@ import { toast } from 'react-toastify';
 import { requestBackendNewUser } from 'util/requests';
 import { useState } from 'react';
 import Registered from '../Registered';
-import { User } from 'types/user';
+import { NewUser } from 'types/new-user';
 
 import './styles.css';
 
 const SignUp = () => {
-  const [newUserCardData, setNewUserCardData] = useState<User>();
+  const [newUserCardData, setNewUserCardData] = useState<NewUser>();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<User>();
+  } = useForm<NewUser>();
 
-  const onSubmit = (formData: User) => {
-    const newUser = {
-      ...formData,
-      roles: [
-        {
-          id: 1,
-          authority: '',
-        },
-      ],
-    };
-
-    requestBackendNewUser(newUser)
+  const onSubmit = (formData: NewUser) => {
+    requestBackendNewUser(formData)
       .then((response) => {
         toast.info('Usuário cadastrado com sucesso');
         setNewUserCardData(response.data);
@@ -100,31 +90,6 @@ const SignUp = () => {
             {errors.email?.message}
           </div>
         </div>
-        <div className="mb-4">
-          <input
-            {...register('password', {
-              required: 'Campo obrigatório',
-            })}
-            type="password"
-            name="password"
-            id="password"
-            placeholder="Senha"
-            className="form-control base-input"
-          />
-          <div className="invalid-feedback d-block">
-            {errors.password?.message}
-          </div>
-        </div>
-
-        {/* <div className="mb-4">
-          <input
-            type="password"
-            name="ensure-password"
-            id="ensure-password"
-            placeholder="Confirme a senha"
-            className="form-control base-input"
-          />
-          </div> */}
 
         <div className="signup-btns">
           <button type="submit" className="btn btn-primary btn-lg send-btn">
