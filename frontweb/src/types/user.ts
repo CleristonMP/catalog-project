@@ -9,5 +9,6 @@ export type User = {
   lastName: string;
   email: string;
   password: string;
+  passwordConfirmation?: string;
   roles: Role[];
 };

@@ -21,6 +21,12 @@
   width: 100%;
 }
 
+.password-instruction {
+  font-size: 14px;
+  letter-spacing: -0.015em;
+  color: #407bff;
+}
+
 .user-crud-buttons-container {
   width: 100%;
   display: flex;

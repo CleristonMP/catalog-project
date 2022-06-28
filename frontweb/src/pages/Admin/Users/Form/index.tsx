@@ -30,6 +30,7 @@ const Form = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    getValues,
     control,
   } = useForm<User>();
 
@@ -83,7 +84,7 @@ const Form = () => {
   return (
     <div className="container">
       <div className="base-card user-crud-form-card">
-        <h1 className="user-crud-form-title">DADOS DO USUÁRIO</h1>
+        <h1 className="user-crud-form-title">CADASTRAR UM USUÁRIO</h1>
 
         <form className="user-crud-form" onSubmit={handleSubmit(onSubmit)}>
           <div className="user-crud-inputs-container">
@@ -188,11 +189,45 @@ const Form = () => {
                   className={`form-control base-input ${
                     errors.password ? 'is-invalid' : ''
                   }`}
-                  placeholder="Senha"
+                  placeholder="Digite aqui a Senha"
                   name="password"
                 />
                 <div className="invalid-feedback d-block">
                   {errors.password?.message}
+                </div>
+                <span className="password-instruction">
+                  A sua senha deve ter pelo menos 8 caracteres e conter pelo
+                  menos um número
+                </span>
+              </div>
+              <div className="col-lg-6 mb-3 mb-xl-4">
+                <input
+                  {...register(
+                    'passwordConfirmation',
+                    !isEditing
+                      ? {
+                          required: 'Campo obrigatório',
+                          validate: {
+                            matchesPreviousPassword: (value) => {
+                              const { password } = getValues();
+                              return (
+                                password === value ||
+                                'As senhas devem ser iguais!'
+                              );
+                            },
+                          },
+                        }
+                      : {}
+                  )}
+                  type="password"
+                  className={`form-control base-input ${
+                    errors.password ? 'is-invalid' : ''
+                  }`}
+                  placeholder="Repita aqui a Senha"
+                  name="passwordConfirmation"
+                />
+                <div className="invalid-feedback d-block">
+                  {errors.passwordConfirmation?.message}
                 </div>
               </div>
             </div>

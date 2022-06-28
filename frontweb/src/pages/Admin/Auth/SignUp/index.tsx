@@ -14,6 +14,7 @@ const SignUp = () => {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm<NewUser>();
 
   const onSubmit = (formData: NewUser) => {
@@ -30,7 +31,7 @@ const SignUp = () => {
 
   return !newUserCardData ? (
     <div className="base-card signup-card">
-      <h1>Cadastre-se</h1>
+      <h1>CADASTRO</h1>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
@@ -88,6 +89,31 @@ const SignUp = () => {
           />
           <div className="invalid-feedback d-block">
             {errors.email?.message}
+          </div>
+        </div>
+        <div className="mb-4">
+          <input
+            {...register('emailConfirmation', {
+              required: 'Campo obrigatório',
+              validate: {
+                matchesPreviousEmail: (value) => {
+                  const { email } = getValues();
+                  return email === value || 'Os e-mails devem ser iguais.';
+                },
+              },
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Email inválido',
+              },
+            })}
+            type="email"
+            name="emailConfirmation"
+            id="emailConfirmation"
+            placeholder="Repita aqui seu E-mail"
+            className="form-control base-input"
+          />
+          <div className="invalid-feedback d-block">
+            {errors.emailConfirmation?.message}
           </div>
         </div>
 

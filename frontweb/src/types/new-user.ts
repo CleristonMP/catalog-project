@@ -3,4 +3,5 @@ export type NewUser = {
   firstName: string;
   lastName: string;
   email: string;
+  emailConfirmation?: string;
 };

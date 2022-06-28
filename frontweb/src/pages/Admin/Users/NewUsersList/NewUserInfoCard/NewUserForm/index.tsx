@@ -20,6 +20,7 @@ const NewUserForm = ({ newUser, onDelete }: Props) => {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm<User>();
 
   const onSubmit = (formData: User) => {
@@ -91,11 +92,34 @@ const NewUserForm = ({ newUser, onDelete }: Props) => {
             className={`form-control base-input ${
               errors.password ? 'is-invalid' : ''
             }`}
-            placeholder="Senha"
+            placeholder="Defina uma SENHA temporária aqui"
             name="password"
           />
           <div className="invalid-feedback d-block">
             {errors.password?.message}
+          </div>
+        </div>
+
+        <div className="mt-2 mt-lg-4 col-lg-6 mb-3 mb-xl-4 new-user-input-container">
+          <input
+            {...register('passwordConfirmation', {
+              required: 'Campo obrigatório',
+              validate: {
+                matchesPreviousPassword: (value) => {
+                  const { password } = getValues();
+                  return password === value || 'As senhas devem ser iguais!';
+                },
+              },
+            })}
+            type="password"
+            className={`form-control base-input ${
+              errors.passwordConfirmation ? 'is-invalid' : ''
+            }`}
+            placeholder="Repita aqui a Senha"
+            name="passwordConfirmation"
+          />
+          <div className="invalid-feedback d-block">
+            {errors.passwordConfirmation?.message}
           </div>
         </div>
 
