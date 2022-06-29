@@ -1,0 +1,11 @@
+.category-crud-container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .category-crud-bar-container {
+    display: flex;
+    margin-bottom: 40px;
+  }
+}

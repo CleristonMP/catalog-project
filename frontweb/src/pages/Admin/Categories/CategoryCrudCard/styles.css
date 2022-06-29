@@ -1,0 +1,75 @@
+.category-crud-card {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.category-name-container {
+  margin-bottom: 10px;
+}
+
+.category-name {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: -0.015em;
+  color: #263238;
+}
+
+.category-crud-buttons-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.category-crud-btn {
+  width: 120px;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: -0.015em;
+  border-radius: 10px;
+}
+
+.category-crud-delete-button {
+  color: #df5753;
+}
+
+.category-crud-update-button {
+  color: #9e9e9e;
+}
+
+@media (min-width: 576px) {
+  .category-crud-card {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+  }
+
+  .category-name-container {
+    margin-bottom: 0;
+  }
+
+  .category-crud-buttons-container {
+    width: 50%;
+    max-width: 260px;
+  }
+}
+
+@media (min-width: 768px) {
+  .category-crud-card {
+    padding: 15px 30px;
+  }
+
+  .category-crud-buttons-container {
+    width: unset;
+    max-width: unset;
+  }
+
+  .category-crud-btn {
+    width: 165px;
+  }
+
+  .category-crud-delete-button {
+    margin-right: 30px;
+  }
+}
