@@ -1,0 +1,84 @@
+.category-crud-form-card {
+  padding: 20px 10px;
+}
+
+.category-crud-form-title {
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.015em;
+  color: #263238;
+  margin-bottom: 30px;
+}
+
+.category-crud-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.category-crud-form-btn {
+  width: 110px;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: -0.015em;
+  border-radius: 10px;
+}
+
+.category-crud-input-container {
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.category-crud-form-buttons-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  max-width: 300px;
+}
+
+.category-crud-button {
+  height: 50px;
+  max-width: 200px;
+  font-weight: bold;
+  border-radius: 10px;
+  font-size: 12px;
+  width: 48%;
+}
+
+@media (min-width: 576px) {
+  .category-crud-form-card {
+    padding: 30px;
+  }
+
+  .category-crud-form-buttons-container {
+    max-width: unset;
+    justify-content: flex-end;
+  }
+
+  .category-crud-form-btn {
+    width: 150px;
+  }
+
+  .category-crud-form-cancel-btn {
+    margin-right: 15px;
+  }
+}
+
+@media (min-width: 992px) {
+  .category-crud-form-card {
+    padding: 75px 45px 50px;
+  }
+
+  .category-crud-form-title {
+    font-size: 24px;
+    margin-bottom: 45px;
+  }
+
+  .category-crud-form {
+    flex-direction: row;
+  }
+
+  .category-crud-input-container {
+    margin-bottom: 0;
+  }
+}
