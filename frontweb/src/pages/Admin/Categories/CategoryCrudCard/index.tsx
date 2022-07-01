@@ -26,6 +26,7 @@ const CategoryCrudCard = ({ category, onDelete }: Props) => {
     requestBackend(config)
       .then(() => {
         onDelete();
+        toast.info(`A categoria ${category.name} foi excluída.`);
       })
       .catch(() => {
         toast.error('Há produtos cadastrados essa categoria.');

@@ -42,7 +42,7 @@ const List = () => {
         page: controlComponentsData.activePage,
         size: 3,
         name: controlComponentsData.filterData.name,
-        sort: `id,${controlComponentsData.filterData.sort}`,
+        sort: `id,${controlComponentsData.filterData.sort || 'desc'}`,
       },
     };
 
