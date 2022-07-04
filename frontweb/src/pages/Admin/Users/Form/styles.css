@@ -1,0 +1,98 @@
+.user-crud-form-card {
+  padding: 20px 10px;
+}
+
+.user-crud-form-title {
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.015em;
+  color: #263238;
+  margin-bottom: 30px;
+}
+
+.user-crud-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-crud-inputs-container {
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.password-pattern-advice {
+  font-size: 14px;
+  letter-spacing: -0.015em;
+  color: #407bff;
+}
+
+.user-crud-form-btns-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  max-width: 300px;
+}
+
+.user-form-button {
+  height: 50px;
+  max-width: 200px;
+  font-weight: bold;
+  border-radius: 10px;
+  font-size: 12px;
+  width: 48%;
+}
+
+.user-crud-select__control {
+  border-radius: 10px !important;
+  font-size: 1em;
+  letter-spacing: -0.015em;
+  color: #263238;
+  height: 50px;
+}
+
+.user-crud-select__placeholder {
+  color: #9e9e9e !important;
+}
+
+.user-crud-select__indicator-separator {
+  display: none;
+}
+
+@media (min-width: 576px) {
+  .user-crud-form-card {
+    padding: 30px;
+  }
+
+  .user-crud-form-btns-container {
+    max-width: 500px;
+  }
+
+  .user-form-button {
+    width: 200px;
+  }
+}
+
+@media (min-width: 992px) {
+  .user-crud-form-card {
+    padding: 75px 45px 50px;
+  }
+
+  .user-crud-form-title {
+    font-size: 24px;
+    margin-bottom: 45px;
+  }
+
+  .user-crud-inputs-container {
+    margin-bottom: 0;
+  }
+
+  .user-crud-form-btns-container {
+    margin-left: auto;
+    justify-content: flex-end;
+  }
+
+  .user-form-cancel-btn {
+    margin-right: 30px;
+  }
+}
