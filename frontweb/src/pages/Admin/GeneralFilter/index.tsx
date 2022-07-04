@@ -10,7 +10,7 @@ export type FilterData = {
   sort?: string;
 };
 
-type OptionType = {
+export type OptionType = {
   value: string;
   label: string;
 };
@@ -37,6 +37,7 @@ const GeneralFilter = ({ onSubmitFilter }: Props) => {
 
   const handleFormClear = () => {
     setValue('name', '');
+    setValue('sort', options[0].value);
     setSelectedOption(options[0]);
   };
 
