@@ -9,6 +9,16 @@ import Select from 'react-select';
 
 import './styles.css';
 
+type UserForm = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  roles: Role[];
+  emailConfirmation: string;
+  passwordConfirmation: string;
+}
+
 const options: Role[] = [
   { id: 1, authority: 'Operador' },
   { id: 2, authority: 'Admin' },
@@ -32,7 +42,7 @@ const Form = () => {
     setValue,
     getValues,
     control,
-  } = useForm<User>();
+  } = useForm<UserForm>();
 
   useEffect(() => {
     if (isEditing) {
@@ -57,10 +67,8 @@ const Form = () => {
     }
   }, [isEditing, userId, setValue]);
 
-  const onSubmit = (formData: User) => {
+  const onSubmit = (formData: UserForm) => {
     const data = formData;
-
-    console.log(data);
 
     const config: AxiosRequestConfig = {
       method: isEditing ? 'PUT' : 'POST',
@@ -233,7 +241,7 @@ const Form = () => {
                   )}
                   type="password"
                   className={`form-control base-input ${
-                    errors.password ? 'is-invalid' : ''
+                    errors.passwordConfirmation ? 'is-invalid' : ''
                   }`}
                   placeholder="Repita aqui a Senha"
                   name="passwordConfirmation"

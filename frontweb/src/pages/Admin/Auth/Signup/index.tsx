@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 import { useForm } from 'react-hook-form';
 import { useHistory } from 'react-router-dom';
-import { User } from 'types/user';
+import { UserForm } from 'types/user';
 import { requestBackend } from 'util/requests';
 
 import './styles.css';
@@ -14,9 +14,9 @@ const Signup = () => {
     handleSubmit,
     getValues,
     formState: { errors },
-  } = useForm<User>();
+  } = useForm<UserForm>();
 
-  const onSubmit = (formData: User) => {
+  const onSubmit = (formData: UserForm) => {
     const data = {
       ...formData,
       roles: [
@@ -70,7 +70,7 @@ const Signup = () => {
             })}
             type="text"
             className={`form-control base-input ${
-              errors.firstName ? 'is-invalid' : ''
+              errors.lastName ? 'is-invalid' : ''
             }`}
             placeholder="Sobrenome"
             name="lastName"

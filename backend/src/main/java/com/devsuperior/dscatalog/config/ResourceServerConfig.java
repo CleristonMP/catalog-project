@@ -32,6 +32,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	
 	private static final String[] ADMIN = { "/users/**" };
 	
+	private static final String[] RECOVER = { "/recover/**" };
+	
 	@Autowired
 	private JwtTokenStore tokenStore;
 
@@ -49,6 +51,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 		
 		http.authorizeRequests()
 		.antMatchers(PUBLIC).permitAll()
+		.antMatchers(RECOVER).permitAll()
 		.antMatchers(HttpMethod.GET, OPERATOR_OR_ADMIN).permitAll()
 		.antMatchers(HttpMethod.POST, ADMIN).permitAll()
 		.antMatchers(OPERATOR_OR_ADMIN).hasAnyRole("OPERATOR", "ADMIN")
