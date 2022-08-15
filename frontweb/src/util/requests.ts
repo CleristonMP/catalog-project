@@ -45,6 +45,24 @@ export const requestBackend = (config: AxiosRequestConfig) => {
   return axios({ ...config, baseURL: BASE_URL, headers });
 };
 
+export const uploadFile = (file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  
+  const config: AxiosRequestConfig = {
+    method: 'POST',
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: 'Bearer ' + getAuthData().access_token,
+    },
+    baseURL: BASE_URL,
+    url: '/products/image',
+    data: formData,
+  }
+
+  return axios(config);
+}
+
 // Add a request interceptor
 axios.interceptors.request.use(
   function (config) {

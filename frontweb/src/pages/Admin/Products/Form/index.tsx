@@ -1,12 +1,12 @@
 import { AxiosRequestConfig } from 'axios';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import { useForm, Controller } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
 import Select from 'react-select';
 import { Category } from 'types/category';
 import { Product } from 'types/product';
-import { requestBackend } from 'util/requests';
+import { requestBackend, uploadFile } from 'util/requests';
 import { toast } from 'react-toastify';
 
 import './styles.css';
@@ -17,6 +17,7 @@ type UrlParams = {
 
 const Form = () => {
   const [selectCategories, setSelectCategories] = useState<Category[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File>(new File([], ''));
 
   const { productId } = useParams<UrlParams>();
 
@@ -52,24 +53,38 @@ const Form = () => {
     }
   }, [isEditing, productId, setValue]);
 
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.target.files
+      ? setSelectedFile(event.target.files[0])
+      : console.error();
+  };
+
   const onSubmit = (formData: Product) => {
-    const data = {
-      ...formData,
-      price: String(formData.price).replace(',', '.'),
-    };
-
-    const config: AxiosRequestConfig = {
-      method: isEditing ? 'PUT' : 'POST',
-      url: isEditing ? `/products/${productId}` : '/products',
-      data,
-      withCredentials: true,
-    };
-
-    requestBackend(config).then(() => {
-      toast.info('Produto cadastrado com sucesso');
-      history.push('/admin/products');
-    }).catch(() => {
-      toast.error('Erro ao cadastrar o produto');
+    uploadFile(selectedFile).then((resp) => {
+      formData.imgUrl = resp.data.uri;
+    }).finally(() => {
+      const data = {
+        ...formData,
+        price: String(formData.price).replace(',', '.'),
+      };
+  
+      const config: AxiosRequestConfig = {
+        method: isEditing ? 'PUT' : 'POST',
+        url: isEditing ? `/products/${productId}` : '/products',
+        data,
+        withCredentials: true,
+      };
+  
+      requestBackend(config)
+        .then(() => {
+          toast.info('Produto cadastrado com sucesso');
+          history.push('/admin/products');
+        })
+        .catch((err) => {
+          console.error(err);
+          
+          toast.error('Erro ao cadastrar o produto');
+        });
     });
   };
 
@@ -104,7 +119,9 @@ const Form = () => {
               </div>
 
               <div className="margin-bottom-30">
-                <label htmlFor="categories" className="d-none">Categorias</label>
+                <label htmlFor="categories" className="d-none">
+                  Categorias
+                </label>
                 <Controller
                   name="categories"
                   rules={{ required: true }}
@@ -157,22 +174,29 @@ const Form = () => {
               </div>
 
               <div className="margin-bottom-30">
+                <label htmlFor="image" className="upload-img-btn btn">
+                  ADICIONAR IMAGEM
+                </label>
                 <input
                   {...register('imgUrl', {
                     required: 'Campo obrigatório',
-                    pattern: {
-                      value: /^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/gm,
-                      message: 'Insira uma URL válida',
-                    },
                   })}
-                  type="text"
+                  type="file"
+                  onChange={handleFileSelect}
                   className={`form-control base-input ${
                     errors.imgUrl ? 'is-invalid' : ''
                   }`}
                   placeholder="URL da imagem do produto"
                   name="imgUrl"
                   data-testid="imgUrl"
+                  id="image"
                 />
+                <div className="upload-img-info">
+                  <span>
+                    As imagens devem ser JPG ou PNG e não devem ultrapassar 5
+                    mb.
+                  </span>
+                </div>
                 <div className="invalid-feedback d-block">
                   {errors.imgUrl?.message}
                 </div>
