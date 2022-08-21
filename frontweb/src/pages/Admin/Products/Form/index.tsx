@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import CurrencyInput from 'react-currency-input-field';
 import { useForm, Controller } from 'react-hook-form';
 import { useHistory, useParams } from 'react-router-dom';
@@ -42,7 +42,7 @@ const Form = () => {
 
   useEffect(() => {
     if (isEditing) {
-      requestBackend({ url: `/products/${productId}` }).then((response) => {
+      requestBackend({ url: `/products/${productId}` }).then(async (response) => {
         const product = response.data as Product;
 
         setValue('name', product.name);
@@ -50,9 +50,18 @@ const Form = () => {
         setValue('description', product.description);
         setValue('imgUrl', product.imgUrl);
         setValue('categories', product.categories);
+
+        const imageFile = getImageAsFile(product.imgUrl, product.name);
+        imagePreview(await imageFile);
       });
     }
   }, [isEditing, productId, setValue]);
+
+  const getImageAsFile = async (url: string, fileName: string) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new File([blob], fileName, {type: blob.type});
+  }
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
@@ -65,8 +74,8 @@ const Form = () => {
   }
 
   const onSubmit = (formData: Product) => {
-    uploadFile(selectedFile).then((resp) => {
-      formData.imgUrl = resp.data.uri;
+    uploadFile(selectedFile).then((response) => {
+      formData.imgUrl = response.data.uri;
     }).finally(() => {
       const data = {
         ...formData,
