@@ -30,6 +30,7 @@ const Form = () => {
     handleSubmit,
     formState: { errors },
     setValue,
+    getValues,
     control,
   } = useForm<Product>();
 
@@ -54,10 +55,14 @@ const Form = () => {
   }, [isEditing, productId, setValue]);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.target.files
-      ? setSelectedFile(event.target.files[0])
-      : console.error();
+    if (!event.target.files) return;
+    setSelectedFile(event.target.files[0]);
+    imagePreview(event.target.files[0]);
   };
+
+  const imagePreview = (image: File) => {
+    document.querySelector('#output')?.setAttribute('src', URL.createObjectURL(image));
+  }
 
   const onSubmit = (formData: Product) => {
     uploadFile(selectedFile).then((resp) => {
@@ -173,7 +178,8 @@ const Form = () => {
                 </div>
               </div>
 
-              <div className="margin-bottom-30">
+              <div className="margin-bottom-30 upload-img-ctr">
+                <img id="output" alt={getValues('name')} />
                 <label htmlFor="image" className="upload-img-btn btn">
                   ADICIONAR IMAGEM
                 </label>

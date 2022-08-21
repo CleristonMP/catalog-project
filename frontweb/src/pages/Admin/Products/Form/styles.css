@@ -22,6 +22,11 @@
   margin-bottom: 30px;
 }
 
+.upload-img-ctr img {
+  width: 195px;
+  margin-bottom: 10px;
+}
+
 .upload-img-btn {
   cursor: pointer;
   width: 213px;
