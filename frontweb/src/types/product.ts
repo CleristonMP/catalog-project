@@ -8,4 +8,5 @@ export type Product = {
     imgUrl: string;
     date: string;
     categories: Category[];
+    img: FileList;
 }
