@@ -6,8 +6,9 @@ import { useHistory, useParams } from 'react-router-dom';
 import Select from 'react-select';
 import { Category } from 'types/category';
 import { Product } from 'types/product';
-import { requestBackend } from 'util/requests';
+import { requestBackend, uploadFile } from 'util/requests';
 import { toast } from 'react-toastify';
+import { ReactComponent as ExclamationCircle } from '../../../../assets/images/exclamation-circle.svg';
 
 import './styles.css';
 
@@ -17,6 +18,8 @@ type UrlParams = {
 
 const Form = () => {
   const [selectCategories, setSelectCategories] = useState<Category[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File>(new File([], ''));
+  const [imgError, setImgError] = useState<boolean>(false);
 
   const { productId } = useParams<UrlParams>();
 
@@ -28,7 +31,9 @@ const Form = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
     setValue,
+    getValues,
     control,
   } = useForm<Product>();
 
@@ -40,22 +45,62 @@ const Form = () => {
 
   useEffect(() => {
     if (isEditing) {
-      requestBackend({ url: `/products/${productId}` }).then((response) => {
-        const product = response.data as Product;
+      requestBackend({ url: `/products/${productId}` }).then(
+        async (response) => {
+          const product = response.data as Product;
 
-        setValue('name', product.name);
-        setValue('price', product.price);
-        setValue('description', product.description);
-        setValue('imgUrl', product.imgUrl);
-        setValue('categories', product.categories);
-      });
+          setValue('name', product.name);
+          setValue('price', product.price);
+          setValue('description', product.description);
+          setValue('categories', product.categories);
+          setValue('imgUrl', product.imgUrl);
+
+          const imageFile = getImageAsFile(product.imgUrl, product.name);
+          imagePreview(await imageFile);
+
+          const dt = new DataTransfer();
+          dt.items.add(await imageFile);
+          const fileList: FileList = dt.files;
+          setValue('img', fileList);
+        }
+      );
     }
   }, [isEditing, productId, setValue]);
 
-  const onSubmit = (formData: Product) => {
+  const getImageAsFile = async (url: string, fileName: string) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new File([blob], fileName, { type: blob.type });
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+    const image = event.target.files[0];
+    if (
+      !['image/jpeg', 'image/png'].includes(image.type) ||
+      image.size > 5000000
+    ) {
+      setImgError(true);
+      return;
+    }
+    setImgError(false);
+    setError('img', { message: '' });
+    setSelectedFile(image);
+    imagePreview(image);
+    setValue('imgUrl', URL.createObjectURL(image));
+  };
+
+  const imagePreview = (image: File) => {
+    document
+      .querySelector('#output')
+      ?.setAttribute('src', URL.createObjectURL(image));
+  };
+
+  const formSumission = (formData: Product) => {
     const data = {
       ...formData,
       price: String(formData.price).replace(',', '.'),
+      date: new Date(Date.now())
     };
 
     const config: AxiosRequestConfig = {
@@ -65,12 +110,28 @@ const Form = () => {
       withCredentials: true,
     };
 
-    requestBackend(config).then(() => {
-      toast.info('Produto cadastrado com sucesso');
-      history.push('/admin/products');
-    }).catch(() => {
-      toast.error('Erro ao cadastrar o produto');
-    });
+    requestBackend(config)
+      .then(() => {
+        toast.info('Produto cadastrado com sucesso');
+        history.push('/admin/products');
+      })
+      .catch((err) => {
+        toast.error('Erro ao cadastrar o produto');
+      });
+  };
+
+  const onSubmit = (formData: Product) => {
+    if (selectedFile.size) {
+      uploadFile(selectedFile)
+        .then((response) => {
+          formData.imgUrl = response.data.uri;
+        })
+        .finally(() => {
+          formSumission(formData);
+        });
+    } else {
+      formSumission(formData);
+    }
   };
 
   const handleCancel = () => {
@@ -104,7 +165,9 @@ const Form = () => {
               </div>
 
               <div className="margin-bottom-30">
-                <label htmlFor="categories" className="d-none">Categorias</label>
+                <label htmlFor="categories" className="d-none">
+                  Categorias
+                </label>
                 <Controller
                   name="categories"
                   rules={{ required: true }}
@@ -156,23 +219,39 @@ const Form = () => {
                 </div>
               </div>
 
-              <div className="margin-bottom-30">
+              <div className="margin-bottom-30 upload-img-ctr">
                 <input
-                  {...register('imgUrl', {
-                    required: 'Campo obrigatório',
-                    pattern: {
-                      value: /^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/gm,
-                      message: 'Insira uma URL válida',
-                    },
-                  })}
+                  {...register('imgUrl', { required: 'Campo obrigatório' })}
                   type="text"
-                  className={`form-control base-input ${
-                    errors.imgUrl ? 'is-invalid' : ''
-                  }`}
-                  placeholder="URL da imagem do produto"
                   name="imgUrl"
                   data-testid="imgUrl"
+                  className="d-none"
                 />
+                <img id="output" alt={getValues('name')} />
+                <label htmlFor="image" className="upload-img-btn btn">
+                  {isEditing ? 'TROCAR IMAGEM' : 'ADICIONAR IMAGEM'}
+                </label>
+                <input
+                  {...register('img')}
+                  accept="image/*"
+                  type="file"
+                  onChange={handleFileSelect}
+                  className={`form-control base-input ${
+                    errors.img ? 'is-invalid' : ''
+                  }`}
+                  name="img"
+                  id="image"
+                />
+                <div className="upload-img-info">
+                  <span
+                    className={
+                      imgError ? 'alert-danger text-uppercase fw-bold d-flex flex-wrap justify-content-center' : ''
+                    }
+                  >
+                    {imgError ? <ExclamationCircle width={30} height={30} /> : <></>} As imagens devem ser JPG
+                    ou PNG e não devem ultrapassar 5 mb.
+                  </span>
+                </div>
                 <div className="invalid-feedback d-block">
                   {errors.imgUrl?.message}
                 </div>
