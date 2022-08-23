@@ -100,6 +100,7 @@ const Form = () => {
     const data = {
       ...formData,
       price: String(formData.price).replace(',', '.'),
+      date: new Date(Date.now())
     };
 
     const config: AxiosRequestConfig = {
