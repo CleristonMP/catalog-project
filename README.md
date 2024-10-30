@@ -21,9 +21,12 @@ O projeto Catalog é uma aplicação web desenvolvida usando o framework Spring 
 **Frontend (React):**
 - React 18
 - React Router
+- React Hook Form
+- React Paginate
 - Axios
-- Tailwind CSS
-- Recharts
+- Typescript
+- Bootstrap
+- Sass
 
 ## Rotas da API
 **Autenticação**:
